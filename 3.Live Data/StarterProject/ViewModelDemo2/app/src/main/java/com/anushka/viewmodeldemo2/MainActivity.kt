@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         viewModelFactory = MainActivityViewModelFactory(startingTotal = 125)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
 
-        viewModel.total.observe(this, Observer {
+        viewModel.totalData.observe(this, Observer {
             binding.resultTextView.text = it.toString();
         })
 
