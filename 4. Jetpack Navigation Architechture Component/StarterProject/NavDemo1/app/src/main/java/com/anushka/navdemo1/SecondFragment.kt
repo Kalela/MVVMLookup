@@ -19,13 +19,16 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class SecondFragment : Fragment() {
-    private lateinit var binding : FragmentSecondBinding
+    private lateinit var binding: FragmentSecondBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_second, container, false)
+
+        var input : String? = arguments!!.getString("user_input")
+        binding.textView.text = input.toString()
         return binding.root
     }
 
