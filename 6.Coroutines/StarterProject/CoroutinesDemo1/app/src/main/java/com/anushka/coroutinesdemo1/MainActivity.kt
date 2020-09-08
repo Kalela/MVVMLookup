@@ -18,8 +18,9 @@ class MainActivity : AppCompatActivity() {
             tvCount.text = count++.toString()
         }
         btnDownloadUserData.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                downloadUserData()
+            CoroutineScope(Dispatchers.Main).launch {
+//                tvUserMessage.text = UserDataManager1().getTotalUserCount().toString()
+                tvUserMessage.text = UserDataManager2().getTotalUserCount().toString()
             }
 
         }
