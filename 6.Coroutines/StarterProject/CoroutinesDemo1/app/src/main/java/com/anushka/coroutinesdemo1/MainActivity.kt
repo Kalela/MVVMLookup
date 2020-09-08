@@ -1,12 +1,11 @@
 package com.anushka.coroutinesdemo1
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
     private var count = 0
@@ -26,9 +25,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun downloadUserData() {
-        for (i in 1..200000) {
-            Log.i("MyTag", "Downloading user $i in ${Thread.currentThread().name}")
+    @SuppressLint("SetTextI18n")
+    private suspend fun downloadUserData() {
+        withContext(Dispatchers.Main) {
+            for (i in 1..200000) {
+
+                tvUserMessage.text = "Downloading user $i in ${Thread.currentThread().name}";
+                delay(100)
+            }
+
         }
     }
 }
