@@ -7,7 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kalela.roomdemo.databinding.ListItemBinding
 import db.Subscriber
 
-class SubscribersRecyclerViewAdapter(private val subscribers : List<Subscriber>, private val clickListener: (Subscriber)->Unit) : RecyclerView.Adapter<MyViewHolder>() {
+class SubscribersRecyclerViewAdapter(private val clickListener: (Subscriber)->Unit) : RecyclerView.Adapter<MyViewHolder>() {
+    private val subscribersList = ArrayList<Subscriber>()
+
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding : ListItemBinding = DataBindingUtil.inflate(layoutInflater, R.layout.list_item, parent, false)
@@ -15,11 +19,16 @@ class SubscribersRecyclerViewAdapter(private val subscribers : List<Subscriber>,
     }
 
     override fun getItemCount(): Int {
-        return subscribers.size
+        return subscribersList.size
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(subscribers[position], clickListener)
+        holder.bind(subscribersList[position], clickListener)
+    }
+
+    fun setList(subscribers : List<Subscriber>) {
+        subscribersList.clear()
+        subscribersList.addAll(subscribers)
     }
 
 }
