@@ -3,9 +3,11 @@ package com.kalela.retrofitdemo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.liveData
+import com.kalela.retrofitdemo.model.AlbumItem
 import com.kalela.retrofitdemo.model.Albums
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Response
@@ -19,6 +21,17 @@ class MainActivity : AppCompatActivity() {
         val retService = RetrofitInstance
             .getRetrofitInstance()
             .create(AlbumService::class.java)
+
+        // path parameters example
+        val pathResponse : LiveData<Response<AlbumItem>> = liveData {
+            val response = retService.getAlbum(3)
+            emit(response)
+        }
+
+        pathResponse.observe(this, Observer {
+            val title = it.body()?.title
+            Toast.makeText(applicationContext, title, Toast.LENGTH_LONG).show()
+        })
 
         val responseLiveData: LiveData<Response<Albums>> = liveData {
             val response = retService.getUsersAlbums(3)
