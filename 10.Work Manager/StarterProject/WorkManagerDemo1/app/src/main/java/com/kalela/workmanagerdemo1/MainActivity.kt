@@ -25,19 +25,30 @@ class MainActivity : AppCompatActivity() {
     private fun setOneTimeWorkRequest() {
         val workManager: WorkManager = WorkManager.getInstance(applicationContext)
 
-        val data : Data = Data.Builder().putInt(KEY_COUNT_VALUE, 125).build()
+        val data: Data = Data.Builder().putInt(KEY_COUNT_VALUE, 125).build()
 
         val constraints = Constraints.Builder()
             .setRequiresCharging(true)
 //            .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-        val oneTimeWorkRequest = OneTimeWorkRequest.Builder(UploadWorker::class.java)
+        val uploadRequest = OneTimeWorkRequest.Builder(UploadWorker::class.java)
             .setConstraints(constraints)
             .setInputData(data)
             .build()
-        workManager.enqueue(oneTimeWorkRequest)
-        workManager.getWorkInfoByIdLiveData(oneTimeWorkRequest.id).observe(this, Observer {
+        val filteringRequest = OneTimeWorkRequest.Builder(FilteringWorker::class.java).build()
+        val compressingRequest = OneTimeWorkRequest.Builder(CompressingWorker::class.java).build()
+        val downloadingWorker = OneTimeWorkRequest.Builder(DownloadingWorker::class.java).build()
+
+        val parallelWorks = mutableListOf<OneTimeWorkRequest>()
+        parallelWorks.add(downloadingWorker)
+        parallelWorks.add(filteringRequest)
+
+        workManager.beginWith(parallelWorks)
+            .then(compressingRequest)
+            .then(uploadRequest)
+            .enqueue()
+        workManager.getWorkInfoByIdLiveData(uploadRequest.id).observe(this, Observer {
             textView.text = it.state.name
             if (it.state.isFinished) {
                 val data = it.outputData
